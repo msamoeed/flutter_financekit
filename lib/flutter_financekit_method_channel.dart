@@ -1,3 +1,6 @@
+/// Method-channel implementation of [FlutterFinancekitPlatform].
+library;
+
 import 'package:flutter/services.dart';
 
 import 'flutter_financekit_platform_interface.dart';

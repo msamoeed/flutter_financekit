@@ -1,0 +1,6 @@
+dartdoc:
+  categories:
+    "FinanceKit":
+      markdown: README.md
+  categoryOrder:
+    - "FinanceKit"

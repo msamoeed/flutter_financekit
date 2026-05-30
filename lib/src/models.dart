@@ -1,56 +1,129 @@
-// Data models mirroring Apple FinanceKit types.
+/// Data models mirroring Apple FinanceKit types.
+library;
 
-enum AuthorizationStatus { notDetermined, denied, authorized }
+/// Whether the app is authorized to access FinanceKit data.
+enum AuthorizationStatus {
+  /// The user has not yet been asked for authorization.
+  notDetermined,
 
-enum AccountType { asset, liability }
+  /// The user has denied access to FinanceKit data.
+  denied,
 
+  /// The app is authorized to access FinanceKit data.
+  authorized,
+}
+
+/// Whether an account holds assets or represents a liability.
+enum AccountType {
+  /// A deposit account, savings account, or similar asset.
+  asset,
+
+  /// A credit card, loan, or similar liability.
+  liability,
+}
+
+/// The kind of financial transaction.
 enum TransactionType {
+  /// An unrecognized transaction type.
   unknown,
+
+  /// An adjustment to an account balance.
   adjustment,
+
+  /// An ATM withdrawal or deposit.
   atm,
+
+  /// A bill payment.
   billPayment,
+
+  /// A check.
   check,
+
+  /// A cash or electronic deposit.
   deposit,
+
+  /// A direct debit (pull payment).
   directDebit,
+
+  /// A direct deposit (push payment, e.g. payroll).
   directDeposit,
+
+  /// A dividend payment.
   dividend,
+
+  /// A fee charged by the institution.
   fee,
+
+  /// An interest payment.
   interest,
+
+  /// A point-of-sale purchase.
   pointOfSale,
+
+  /// A refund or reversal.
   refund,
+
+  /// A standing order (recurring payment).
   standingOrder,
+
+  /// A transfer between accounts.
   transfer,
+
+  /// A cash withdrawal.
   withdrawal,
 }
 
-enum TransactionStatus { authorized, booked, memo, pending }
+/// The settlement status of a transaction.
+enum TransactionStatus {
+  /// Approved but not yet fully processed.
+  authorized,
 
-enum CreditDebitIndicator { credit, debit }
+  /// Settled and posted to the account.
+  booked,
 
+  /// A memo or informational entry (no funds movement).
+  memo,
+
+  /// Initiated but not yet authorized.
+  pending,
+}
+
+/// Whether a transaction increases or decreases the account balance.
+enum CreditDebitIndicator {
+  /// Funds added to the account (income, refund, deposit).
+  credit,
+
+  /// Funds removed from the account (purchase, fee, withdrawal).
+  debit,
+}
+
+/// A monetary amount paired with its ISO 4217 currency code.
 class CurrencyAmount {
-  final double amount;
-  final String currencyCode;
-
+  /// Creates a [CurrencyAmount] with the given [amount] and [currencyCode].
   const CurrencyAmount({required this.amount, required this.currencyCode});
 
+  /// Deserializes from a native method-channel map.
   factory CurrencyAmount.fromMap(Map<Object?, Object?> map) => CurrencyAmount(
         amount: (map['amount'] as num).toDouble(),
         currencyCode: map['currencyCode'] as String,
       );
 
+  /// The numeric value of the amount.
+  final double amount;
+
+  /// The ISO 4217 currency code, e.g. `"USD"` or `"EUR"`.
+  final String currencyCode;
+
+  /// Serializes to a method-channel–compatible map.
   Map<String, dynamic> toMap() => {'amount': amount, 'currencyCode': currencyCode};
 
   @override
   String toString() => '$currencyCode $amount';
 }
 
+/// A snapshot of an account's balance at a point in time.
 class AccountBalance {
-  final String id;
-  final String accountId;
-  final CurrencyAmount available;
-  final CurrencyAmount booked;
-  final DateTime asOf;
-
+  /// Creates an [AccountBalance].
   const AccountBalance({
     required this.id,
     required this.accountId,
@@ -59,6 +132,7 @@ class AccountBalance {
     required this.asOf,
   });
 
+  /// Deserializes from a native method-channel map.
   factory AccountBalance.fromMap(Map<Object?, Object?> map) => AccountBalance(
         id: map['id'] as String,
         accountId: map['accountId'] as String,
@@ -66,15 +140,26 @@ class AccountBalance {
         booked: CurrencyAmount.fromMap(map['booked'] as Map<Object?, Object?>),
         asOf: DateTime.fromMillisecondsSinceEpoch((map['asOf'] as int) * 1000),
       );
+
+  /// The unique identifier for this balance record.
+  final String id;
+
+  /// The identifier of the account this balance belongs to.
+  final String accountId;
+
+  /// The immediately spendable balance.
+  final CurrencyAmount available;
+
+  /// The settled (posted) balance.
+  final CurrencyAmount booked;
+
+  /// When this balance was calculated.
+  final DateTime asOf;
 }
 
+/// A financial account linked in Apple Wallet.
 class FinancialAccount {
-  final String id;
-  final String displayName;
-  final AccountType accountType;
-  final String institutionName;
-  final String? currencyCode;
-
+  /// Creates a [FinancialAccount].
   const FinancialAccount({
     required this.id,
     required this.displayName,
@@ -83,6 +168,7 @@ class FinancialAccount {
     this.currencyCode,
   });
 
+  /// Deserializes from a native method-channel map.
   factory FinancialAccount.fromMap(Map<Object?, Object?> map) => FinancialAccount(
         id: map['id'] as String,
         displayName: map['displayName'] as String,
@@ -90,20 +176,26 @@ class FinancialAccount {
         institutionName: map['institutionName'] as String,
         currencyCode: map['currencyCode'] as String?,
       );
+
+  /// The unique account identifier (UUID string).
+  final String id;
+
+  /// The user-facing name of the account.
+  final String displayName;
+
+  /// Whether this is an asset or liability account.
+  final AccountType accountType;
+
+  /// The name of the financial institution that holds the account.
+  final String institutionName;
+
+  /// The ISO 4217 currency code the account is denominated in, if known.
+  final String? currencyCode;
 }
 
+/// A financial transaction on an account.
 class Transaction {
-  final String id;
-  final String accountId;
-  final CurrencyAmount amount;
-  final TransactionType transactionType;
-  final TransactionStatus status;
-  final CreditDebitIndicator creditDebitIndicator;
-  final DateTime transactionDate;
-  final String? merchantName;
-  final String? merchantCategoryCode;
-  final String? originalTransactionDescription;
-
+  /// Creates a [Transaction].
   const Transaction({
     required this.id,
     required this.accountId,
@@ -117,6 +209,7 @@ class Transaction {
     this.originalTransactionDescription,
   });
 
+  /// Deserializes from a native method-channel map.
   factory Transaction.fromMap(Map<Object?, Object?> map) => Transaction(
         id: map['id'] as String,
         accountId: map['accountId'] as String,
@@ -131,14 +224,44 @@ class Transaction {
         merchantCategoryCode: map['merchantCategoryCode'] as String?,
         originalTransactionDescription: map['originalTransactionDescription'] as String?,
       );
+
+  /// The unique transaction identifier (UUID string).
+  final String id;
+
+  /// The identifier of the account this transaction belongs to.
+  final String accountId;
+
+  /// The transaction amount and currency.
+  final CurrencyAmount amount;
+
+  /// The category of the transaction.
+  final TransactionType transactionType;
+
+  /// The settlement status of the transaction.
+  final TransactionStatus status;
+
+  /// Whether this transaction adds or removes funds from the account.
+  final CreditDebitIndicator creditDebitIndicator;
+
+  /// When the transaction occurred.
+  final DateTime transactionDate;
+
+  /// The merchant name, if available.
+  final String? merchantName;
+
+  /// The ISO 18245 merchant category code as a string, if available.
+  final String? merchantCategoryCode;
+
+  /// The unmodified description as provided by the financial institution.
+  final String? originalTransactionDescription;
 }
 
+/// Parameters for filtering a transaction query.
 class TransactionQuery {
-  final String? accountId;
-  final DateTime? startDate;
-  final DateTime? endDate;
-  final int? limit;
-
+  /// Creates a [TransactionQuery] with optional filters.
+  ///
+  /// All parameters are optional. Omit a parameter to apply no filter for
+  /// that dimension.
   const TransactionQuery({
     this.accountId,
     this.startDate,
@@ -146,6 +269,19 @@ class TransactionQuery {
     this.limit,
   });
 
+  /// Restrict results to a specific account (UUID string).
+  final String? accountId;
+
+  /// Exclude transactions before this date.
+  final DateTime? startDate;
+
+  /// Exclude transactions after this date.
+  final DateTime? endDate;
+
+  /// Maximum number of transactions to return.
+  final int? limit;
+
+  /// Serializes to a method-channel–compatible map.
   Map<String, dynamic> toMap() => {
         if (accountId != null) 'accountId': accountId,
         if (startDate != null) 'startDate': startDate!.millisecondsSinceEpoch ~/ 1000,
