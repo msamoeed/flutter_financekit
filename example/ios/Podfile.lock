@@ -1,0 +1,22 @@
+PODS:
+  - Flutter (1.0.0)
+  - flutter_financekit (0.0.1):
+    - Flutter
+
+DEPENDENCIES:
+  - Flutter (from `Flutter`)
+  - flutter_financekit (from `.symlinks/plugins/flutter_financekit/ios`)
+
+EXTERNAL SOURCES:
+  Flutter:
+    :path: Flutter
+  flutter_financekit:
+    :path: ".symlinks/plugins/flutter_financekit/ios"
+
+SPEC CHECKSUMS:
+  Flutter: cabc95a1d2626b1b06e7179b784ebcf0c0cde467
+  flutter_financekit: a504f4021bc38f5472e8ebb7f0d982c2ba84c08b
+
+PODFILE CHECKSUM: 636f25f2a83acd32651e2b200c183d0619d55f1a
+
+COCOAPODS: 1.16.2
