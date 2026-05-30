@@ -3,9 +3,9 @@ description: >-
   A Flutter plugin for Apple FinanceKit. Access financial accounts,
   balances, and transactions from Apple Wallet on iOS 17.4+.
 version: 1.0.0+1
-homepage: https://github.com/abdulmoeed/flutter_financekit
-repository: https://github.com/abdulmoeed/flutter_financekit
-issue_tracker: https://github.com/abdulmoeed/flutter_financekit/issues
+homepage: https://github.com/msamoeed/flutter_financekit
+repository: https://github.com/msamoeed/flutter_financekit
+issue_tracker: https://github.com/msamoeed/flutter_financekit/issues
 topics:
   - financekit
   - finance

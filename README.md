@@ -35,8 +35,7 @@ Add to your `pubspec.yaml`:
 
 ```yaml
 dependencies:
-  flutter_financekit:
-    path: ../flutter_financekit  # or your pub.dev package name once published
+  flutter_financekit: ^1.0.0
 ```
 
 ### iOS setup
